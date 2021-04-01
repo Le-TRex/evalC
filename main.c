@@ -61,6 +61,24 @@
  * open pour créer un nouveau fichier /!\ utiliser my_putrevstr() pour nom du fichier en reverse + générer son fildes => write dedans grâce au fildes
  * */
 
+void my_putchar(char c)
+{
+    write(1, &c, 1);
+    //write(1 = sortie standard, &c = adresse où est stockée la variable, 1 = on n'affiche qu'un seul caractère)
+}
+
+// *str = pointeur => commence au 1er caractère d'une string et s'arrête au \0 
+void my_putstr(char*   str)
+{
+    int i;
+    i=0;
+    while(str[i])
+    {
+        my_putchar(str[i]);
+        i++;
+    }
+}
+
 int my_strlen(char*    str) {
     int i;
 
@@ -69,7 +87,7 @@ int my_strlen(char*    str) {
     return (i);
 }
 
-char	*create_new_file(char *arg)
+char	*reverse_name(char *arg)
 {
 	int		len;
 	char	*new_name;
@@ -98,18 +116,85 @@ char	*create_new_file(char *arg)
 	return (new_name);
 }
 
+int *create_index_table(char *content)
+{
+	int		nb_words = 1;//car on a verifie que le fichier n'est pas vide
+	int		i = 0;
+	int		y;
+	int 	*indexes;
+	
+	while (content[i])	
+	{
+		if (content[i] == '\n')
+		{
+			nb_words++;
+		}
+		i++;
+	}
+	//printf("nb_words = %d\n", nb_words);
+	indexes = malloc(sizeof(int) * nb_words);
+	//rempli le tableau d'index de -1 pour avoir une valeure d'arret plus tard
+	for (i = 0; i < nb_words; i++)	
+	{
+		indexes[i] = -1;
+	}
+	//for (i = 0; i < nb_words; i++)
+	//	printf("index %d = %d\n", i, indexes[i]);
+	indexes[0] = 0;
+	i = 0;//i navigue le long de content
+	y = 1;//y navigue dans le tableau d'index
+	while (content[i])
+	{
+		if (content[i] == '\n' && content[i + 1])
+		{
+			indexes[y] = i + 1;
+			y++;
+		}
+		i++;
+	}
+	//for (i = 0; i < nb_words; i++)
+	//	printf("index %d = %d\n", i, indexes[i]);
+	return (indexes);
+}
+
 int main(int argc, char **argv) {
 	int		fd_input = 0;
 	int		fd_output = 0;
 	char	*file_name;
+	int		nb_of_chars;
+	char	*content;
+	int		*indexes;
+
 
 	(void)argc;
-	if (open(argv[1], O_RDONLY) == -1)
+	if ((fd_input = open(argv[1], O_RDONLY)) == -1)
 		return -1;
-	file_name = create_new_file(argv[1]);
-	printf("file_name = %s\n", file_name);
+	file_name = reverse_name(argv[1]);
+//	printf("file_name = %s\n", file_name);
+	if ((fd_output = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0777)) == -1)
+		return -1;
+	free(file_name);
+//lseek renvoi le nombre de char dans le fichier (car on place le curseur de
+//lecture a la fin
+	nb_of_chars = lseek(fd_input, 0, SEEK_END);
+	//printf("nb_of_chars = %d\n", nb_of_chars);
+	if (nb_of_chars == 0)	
+	{
+		my_putstr("Input file is empty");
+		return 0;
+	}
+//creer string qui peux accueillir le contenu du fichier
+	content = malloc(sizeof(char) * nb_of_chars);
+//je me remet au debut du fichier
+	lseek(fd_input, 0, SEEK_SET);
+//enregistrement du contenu du fichier dans content
+	read(fd_input, content, nb_of_chars);
+//	printf("content = %s\n", content);
+	indexes = create_index_table(content);
+	//CONTINUER PROGRAMME ICI
 	close(fd_input);
 	close(fd_output);
+	free(content);
     return 0;
 }
 
