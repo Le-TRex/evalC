@@ -132,9 +132,9 @@ int *create_index_table(char *content)
 		i++;
 	}
 	//printf("nb_words = %d\n", nb_words);
-	indexes = malloc(sizeof(int) * nb_words);
+	indexes = malloc(sizeof(int) * nb_words + 1);
 	//rempli le tableau d'index de -1 pour avoir une valeure d'arret plus tard
-	for (i = 0; i < nb_words; i++)	
+	for (i = 0; i < nb_words + 1; i++)	
 	{
 		indexes[i] = -1;
 	}
@@ -152,10 +152,47 @@ int *create_index_table(char *content)
 		}
 		i++;
 	}
-	//for (i = 0; i < nb_words; i++)
+	//for (i = 0; i < nb_words + 1; i++)
 	//	printf("index %d = %d\n", i, indexes[i]);
 	return (indexes);
 }
+
+/*
+void line_to_write(int fd_output, int *indexes, int nb_of_chars, char *content)
+{
+	int		i;
+	int		y;
+	int		inf;
+	int		sup;
+	
+	i = 0;
+	y = i + 1;
+	while (indexes[y] != -1)
+	{
+		inf = indexes[i];
+		sup = indexes[y];
+		if (content[inf] < content[sup])
+		{
+			while (indexes[y] == '-2')
+			{
+				y++;
+			}
+			if (indexes[y] == -1)
+			{
+				return (inf);
+			}
+			sup = indexes[y];
+		}
+		else if (content[inf] == content[sup])
+		{
+		
+		}
+		else if (content[inf] > content[sup])
+		{
+
+		}
+	}
+}*/
 
 int main(int argc, char **argv) {
 	int		fd_input = 0;
@@ -164,6 +201,7 @@ int main(int argc, char **argv) {
 	int		nb_of_chars;
 	char	*content;
 	int		*indexes;
+	//int		index;
 
 
 	(void)argc;
@@ -191,7 +229,7 @@ int main(int argc, char **argv) {
 	read(fd_input, content, nb_of_chars);
 //	printf("content = %s\n", content);
 	indexes = create_index_table(content);
-	//CONTINUER PROGRAMME ICI
+	//index = line_to_write(fd_output, indexes, nb_of_chars, content);
 	close(fd_input);
 	close(fd_output);
 	free(content);
