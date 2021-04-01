@@ -64,6 +64,7 @@
 int my_strlen(char*    str) {
     int i;
 
+
     for (i = 0; str[i] != '\0'; ++i);
 
     return (i);
@@ -75,6 +76,9 @@ char	*create_new_file(char *arg)
 	char	*new_name;
 	int		i = 0;
 	int		y = 0;
+
+
+
 
 	len = my_strlen(arg);
 	new_name = malloc(sizeof(char) * len + 1);
@@ -104,7 +108,7 @@ int main(int argc, char **argv) {
 	char	*file_name;
 
 	(void)argc;
-	if (open(argv[1], O_RDONLY) == -1)
+	if (open(argv[1], O_RDONLY) == -1) //if (open(argv[1])) => argv[0] = nom du programme et argv[1] = nom du 1er argument, ici le fichier à copier
 		return -1;
 	file_name = create_new_file(argv[1]);
 	printf("file_name = %s\n", file_name);
