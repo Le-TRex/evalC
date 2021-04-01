@@ -1,0 +1,6 @@
+truc
+bidule
+coder en c
+42
+c cool
+-5
