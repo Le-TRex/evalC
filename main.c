@@ -61,12 +61,55 @@
  * open pour créer un nouveau fichier /!\ utiliser my_putrevstr() pour nom du fichier en reverse + générer son fildes => write dedans grâce au fildes
  * */
 
+int my_strlen(char*    str) {
+    int i;
 
+    for (i = 0; str[i] != '\0'; ++i);
 
+    return (i);
+}
 
+char	*create_new_file(char *arg)
+{
+	int		len;
+	char	*new_name;
+	int		i = 0;
+	int		y = 0;
+
+	len = my_strlen(arg);
+	new_name = malloc(sizeof(char) * len + 1);
+	for (i = 0; i <= len ; i++)
+	{
+		new_name[i] = arg[i];
+	}
+	i--;//remonte au niveau du \0
+	y = len - 1; //y se trouve un char en amont de \0
+	while (arg[i] != '/')
+	{
+		i--;//on fait remonter i avant le nom de fichier, sur le slash
+	}
+	i++; //on place i sur la premiere lettre du nom de fichier
+	while (i < len)
+	{
+		new_name[y] = arg[i];//inverse lettres de la partie nom de fichier
+		y--;
+		i++;
+	}
+	return (new_name);
+}
 
 int main(int argc, char **argv) {
-    printf("hello %s!\n", (argc > 1 ? argv[1] : "world"));
+	int		fd_input = 0;
+	int		fd_output = 0;
+	char	*file_name;
+
+	(void)argc;
+	if (open(argv[1], O_RDONLY) == -1)
+		return -1;
+	file_name = create_new_file(argv[1]);
+	printf("file_name = %s\n", file_name);
+	close(fd_input);
+	close(fd_output);
     return 0;
 }
 
