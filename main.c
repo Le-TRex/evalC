@@ -4,10 +4,7 @@
 #include <sys/stat.h> //open
 #include <fcntl.h> //open
 
-
-
-
-#include <stdio.h> //printf A ENLEVEEEEEEER
+#include <stdio.h> //printf pour debug
 
 
 
@@ -204,8 +201,8 @@ void sort_lines(int fd_output, char *content, int *indexes)
 			ascii = 123;;
 		}
 	}
-	ascii = 65;
-	while (ascii < 90) //checker lettres maj ET min 
+	ascii = 65; //ascii 65 = "A"
+	while (ascii < 91) //checker lettres maj ET min (ascii 90 = "Z")
 	{
 		while (indexes[i] != -1)
 		{
@@ -229,7 +226,6 @@ int main(int argc, char **argv) {
 	int		nb_of_chars;
 	char	*content;
 	int		*indexes;
-	//int		index;
 
 
 	(void)argc;
